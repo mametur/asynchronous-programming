@@ -1,51 +1,36 @@
 'use strict';
 
-
 const log = labeledLogger('2. Write URL');
 const expect = chai.expect;
 
 const origin = window.location.origin;
-const path = _;
+const path = '/isolate/04-fetch/fake-api/food/dry/nuts.json';
 const requestURL = origin + path;
-log("requestURL: ", requestURL);
-
-
+log('requestURL: ', requestURL);
 
 const parseResponse = (response) => {
-  const parsedResponse = response.json();
-  log('response: ', response, '\n',
-    'parsed: ', parsedResponse);
-  return parsedResponse;
+	const parsedResponse = response.json();
+	log('response: ', response, '\n', 'parsed: ', parsedResponse);
+	return parsedResponse;
 };
 
 const separateBrazilNut = (nuts) => {
-  log('nuts:', nuts);
-  return nuts[1];
+	log('nuts:', nuts);
+	return nuts[1];
 };
 
 const testNut = (brazilNut) => {
-  log('brazilNut: ', brazilNut);
-  it('this one is also a country', () => {
-    expect(brazilNut).to.equal('brazil');
-  });
+	log('brazilNut: ', brazilNut);
+	it('this one is also a country', () => {
+		expect(brazilNut).to.equal('brazil');
+	});
 };
 
 const handleRejection = (err) => {
-  log(err);
+	log(err);
 };
 
-
 // careful, these might not be right
-fetch(requestURL)
-  .then(parseResponse())
-  .then(separateBrazilNut())
-  .then(testNut())
-  .catch(handleRejection());
-
-
-
-
+fetch(requestURL).then(parseResponse).then(separateBrazilNut).then(testNut).catch(handleRejection);
 
 log('end of synchronous tasks');
-
-
