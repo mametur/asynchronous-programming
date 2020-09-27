@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>explore pokemon (compressed)</title>
+	</head>
+
+	<body>
+		<form>
+			<input type="number" name="userId" min="1" max="10" />
+			<input type="button" id="add-pokemon-button" value="add pokemon" />
+		</form>
+
+		<div id="poke-root"></div>
+
+		<script>
+			const state = []; // store here
+			document.getElementById('add-pokemon-button').addEventListener('click', showPokemon);
+
+			const divEl = document.getElementById('poke-root');
+			function showPokemon(e) {
+				const pokemonId = e.target.form.userId.value;
+
+				const url = `https://pokeapi.co/api/v2/pokemon/${pokemonId}/`;
+
+				fetch(url)
+					.then((res) => res.json())
+					.then((data) => {
+						console.log(data);
+						const pokemonInfo = {
+							id: pokemonId,
+							name: data.name,
+							picture: data.sprites['front_shiny'],
+						};
+
+						state.push(pokemonInfo);
+						console.log('state', pokemonInfo);
+
+						while (divEl.firstChild) {
+							divEl.removeChild(divEl.firstChild);
+						}
+						state.forEach((element) => {
+							const pTag = document.createElement('p');
+							const imgTag = document.createElement('img');
+							pTag.innerHTML = `${element.id}: ${element.name}`;
+							imgTag.src = `${element.picture}`;
+							divEl.appendChild(pTag);
+							divEl.appendChild(imgTag);
+						});
+					});
+			}
+		</script>
+	</body>
+</html>
