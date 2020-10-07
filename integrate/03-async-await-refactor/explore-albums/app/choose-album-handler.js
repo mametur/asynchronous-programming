@@ -1,19 +1,26 @@
 import { Album } from './album.js';
 
-export const chooseAlbumHandler = (event) => {
-  const albumId = event.target.form.albumId.value;
+const fetchedUrl = async (id) => {
+	const url = 'https://jsonplaceholder.typicode.com/albums/' + id;
 
-  fetch('https://jsonplaceholder.typicode.com/albums/' + albumId)
-    .then(res => res.json())
-    .then(albumData => {
-      const newAlbum = new Album(albumData);
-      return newAlbum.populate();
-    })
-    .then(albumInstance => {
-      console.log(albumInstance);
-      const view = albumInstance.render();
-      document.getElementById('root').innerHTML = '';
-      document.getElementById('root').appendChild(view);
-    })
-    .catch(err => console.error(err));
+	const response = await fetch(url);
+
+	const albumData = await response.json();
+
+	const newAlbum = new Album(albumData);
+
+	return newAlbum.populate();
+};
+
+export const chooseAlbumHandler = (event) => {
+	const albumId = event.target.form.albumId.value;
+
+	fetchedUrl(albumId)
+		.then((albumInstance) => {
+			console.log(albumInstance);
+			const view = albumInstance.render();
+			document.getElementById('root').innerHTML = '';
+			document.getElementById('root').appendChild(view);
+		})
+		.catch((err) => console.error(err));
 };
